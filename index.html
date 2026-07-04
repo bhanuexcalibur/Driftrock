@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driftrock &times; Bhanu Kumar &middot; Proof of Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg:      #0a0b0d;
+  --bg2:     #0f1113;
+  --bg3:     #151719;
+  --bg4:     #1b1e21;
+  --bg5:     #23262a;
+  --bdr:     rgba(255,255,255,0.08);
+  --bmd:     rgba(255,255,255,0.14);
+  --blg:     rgba(255,255,255,0.24);
+  --t1:      #eef0f2;
+  --t2:      #91969d;
+  --t3:      #55595f;
+  --amb:     #ff7a35;
+  --amb-dim: rgba(255,122,53,0.11);
+  --amb-glow:rgba(255,122,53,0.30);
+  --amb-t:   #ffab7d;
+  --stl:     #6fb3d6;
+  --stl-dim: rgba(111,179,214,0.11);
+  --stl-t:   #a3d4ec;
+  --red:     #e5645a;
+  --red-dim: rgba(229,100,90,0.12);
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:64px;}
+body{
+  background:var(--bg);color:var(--t1);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;font-weight:400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(640px 420px at 10% -8%, rgba(255,122,53,0.06), transparent 60%),
+    radial-gradient(560px 400px at 100% 4%, rgba(111,179,214,0.05), transparent 60%);
+}
+::selection{background:var(--amb-dim);color:var(--t1);}
+a{color:inherit;}
+img,svg{display:block;}
+
+.pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--amb),var(--stl));z-index:500;width:0%;transition:width 0.1s linear;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:300;background:rgba(10,11,13,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--bdr);padding:0 5vw;}
+.nav-i{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px;}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--t1);letter-spacing:0.02em;white-space:nowrap;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-brand .dot{width:6px;height:6px;border-radius:50%;background:var(--amb);box-shadow:0 0 0 0 var(--amb-glow);animation:dotpulse 2.4s ease-in-out infinite;}
+@keyframes dotpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+.nav-brand b{font-weight:500;}
+.nav-brand span{color:var(--t3);}
+.nav-links{display:flex;gap:2px;flex-wrap:wrap;}
+.np{font-size:12px;font-weight:500;padding:6px 12px;border-radius:6px;border:1px solid transparent;color:var(--t2);background:transparent;text-decoration:none;transition:all 0.13s;white-space:nowrap;font-family:'IBM Plex Mono',monospace;letter-spacing:0.01em;}
+.np:hover{border-color:var(--bdr);color:var(--t1);background:var(--bg3);}
+.np.cta{background:var(--amb);border-color:var(--amb);color:#20110a;font-weight:600;margin-left:6px;}
+.np.cta:hover{opacity:0.88;}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;flex-shrink:0;}
+.hbg span{display:block;width:20px;height:1.5px;background:var(--t1);border-radius:2px;transition:transform .3s,opacity .3s;}
+.hbg.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hbg.open span:nth-child(2){opacity:0;}
+.hbg.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mob-menu{display:none;position:fixed;inset:0;top:60px;background:var(--bg);z-index:290;flex-direction:column;padding:26px 5vw;gap:0;border-top:1px solid var(--bdr);}
+.mob-menu.open{display:flex;}
+.mob-menu a{display:block;font-size:17px;font-family:'Space Grotesk',sans-serif;font-weight:500;color:var(--t1);text-decoration:none;padding:15px 0;border-bottom:1px solid var(--bdr);}
+.mob-menu a:last-child{border-bottom:none;}
+.mob-menu a.mcta{color:var(--amb-t);}
+@media(max-width:760px){.nav-links{display:none;}.hbg{display:flex;}}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 5vw;position:relative;z-index:1;}
+section.part{padding:84px 0;border-bottom:1px solid var(--bdr);}
+.rv{opacity:0;transform:translateY(14px);transition:opacity 0.55s ease,transform 0.55s ease;}
+.rv.in{opacity:1;transform:none;}
+
+.sec-label{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.sec-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amb-t);border:1px solid rgba(255,122,53,0.3);background:var(--amb-dim);border-radius:5px;padding:3px 8px;}
+.sec-title{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--t3);}
+.part-h{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(24px,3.4vw,36px);line-height:1.22;letter-spacing:-0.01em;color:var(--t1);margin-bottom:16px;max-width:820px;}
+.part-lead{font-size:15.5px;color:var(--t2);max-width:680px;line-height:1.75;margin-bottom:38px;}
+.part-lead strong{color:var(--t1);font-weight:600;}
+
+/* HERO */
+.hero{padding:78px 5vw 70px;max-width:1200px;margin:0 auto;position:relative;z-index:1;border-bottom:1px solid var(--bdr);}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:var(--t3);margin-bottom:20px;}
+.hero-hed{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,5vw,52px);line-height:1.1;letter-spacing:-0.015em;color:var(--t1);margin-bottom:18px;max-width:880px;}
+.hero-hed .hl{color:var(--amb-t);}
+.hero-sub{font-size:clamp(15px,1.6vw,16.5px);color:var(--t2);max-width:640px;line-height:1.75;margin-bottom:44px;}
+.hero-sub strong{color:var(--t1);font-weight:600;}
+.hero-seq{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;letter-spacing:0.02em;color:var(--amb-t);margin-bottom:22px;}
+.hero-seq span{color:var(--t3);margin:0 4px;}
+
+/* LIFECYCLE CONSOLE */
+.console-caption{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:0.04em;margin-bottom:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.console-caption .live{color:var(--amb-t);}
+.console{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:26px 22px 22px;margin-bottom:22px;overflow:hidden;}
+.stage-row{display:grid;grid-template-columns:1.05fr 0.95fr 0.95fr 1.05fr;gap:0;align-items:stretch;min-height:200px;}
+.stage{position:relative;padding:0 14px;display:flex;flex-direction:column;}
+.stage:not(:last-child){border-right:1px dashed var(--bdr);}
+.stage-lab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.stage-lab b{color:var(--t2);font-weight:600;}
+
+.chan-list{display:flex;flex-direction:column;gap:7px;}
+.chan{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--t2);background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:7px 9px;cursor:pointer;transition:all .15s;}
+.chan:hover{border-color:var(--blg);color:var(--t1);}
+.chan.active{border-color:var(--amb);color:var(--amb-t);background:var(--amb-dim);}
+.chan-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);flex-shrink:0;}
+.chan.active .chan-dot{background:var(--amb);}
+
+.lead-track{position:relative;flex:1;min-height:110px;margin-top:6px;}
+.lead{position:absolute;left:0;top:0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t1);background:var(--bg4);border:1px solid var(--bmd);border-radius:5px;padding:4px 7px;white-space:nowrap;opacity:0;will-change:transform,opacity;}
+.lead.reject{border-color:rgba(229,100,90,0.4);color:var(--red);}
+.lead.ok{border-color:rgba(255,122,53,0.4);}
+
+.reject-well{margin-top:auto;padding-top:10px;border-top:1px dashed var(--bdr);}
+.reject-count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);}
+.reject-count b{font-size:15px;}
+
+.route-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:12px;margin-top:6px;opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;}
+.route-card.in{opacity:1;transform:none;}
+.route-name{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.route-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t2);}
+.route-tag{display:inline-block;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--amb-dim);color:var(--amb-t);border:1px solid rgba(255,122,53,0.3);border-radius:5px;padding:2px 7px;}
+
+.signal-zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;gap:10px;}
+.signal-arc{width:100%;height:44px;position:relative;}
+.signal-line{position:absolute;left:6%;right:6%;top:50%;height:1px;background:var(--bdr);}
+.signal-pulse{position:absolute;top:50%;left:94%;width:8px;height:8px;margin-top:-4px;margin-left:-4px;border-radius:50%;background:var(--stl);opacity:0;will-change:transform,opacity;box-shadow:0 0 10px var(--stl);}
+.signal-count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--stl-t);text-align:center;}
+.signal-count b{font-size:16px;color:var(--t1);}
+
+.console-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:30px;}
+.replay-btn{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;color:var(--t2);background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:8px 13px;cursor:pointer;transition:all .15s;}
+.replay-btn:hover{color:var(--t1);border-color:var(--blg);}
+.replay-btn svg{width:12px;height:12px;stroke:currentColor;}
+.replay-btn.invite{border-color:var(--amb);color:var(--amb-t);animation:invitepulse 1.2s ease-in-out 2;}
+@keyframes invitepulse{0%,100%{box-shadow:0 0 0 0 var(--amb-dim);}50%{box-shadow:0 0 0 6px transparent;}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t3);}
+.legend span{display:flex;align-items:center;gap:5px;}
+.legend i{width:7px;height:7px;border-radius:2px;display:inline-block;}
+
+.hero-toc{display:flex;gap:8px;flex-wrap:wrap;}
+.toc-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--t2);background:var(--bg3);border:1px solid var(--bdr);border-radius:20px;padding:6px 13px;text-decoration:none;transition:all .15s;}
+.toc-pill:hover{border-color:var(--blg);color:var(--t1);}
+
+@media(max-width:820px){
+  .stage-row{grid-template-columns:1fr;gap:20px;}
+  .stage{border-right:none!important;padding:0;border-bottom:1px dashed var(--bdr);padding-bottom:18px;}
+  .stage:last-child{border-bottom:none;padding-bottom:0;}
+  .lead-track{min-height:90px;}
+}
+
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:0;border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--t2);background:none;border:none;border-bottom:2px solid transparent;padding:11px 4px;margin-right:20px;cursor:pointer;transition:all .15s;}
+.tab:hover{color:var(--t1);}
+.tab.on{color:var(--amb-t);border-bottom-color:var(--amb);}
+.tab.on.stl{color:var(--stl-t);border-bottom-color:var(--stl);}
+.tpanel{display:none;padding-top:26px;}
+.tpanel.on{display:block;}
+.panel-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:11px;padding:22px 24px;margin-bottom:16px;}
+.panel-box.amb{border-color:rgba(255,122,53,0.28);background:linear-gradient(180deg,rgba(255,122,53,0.05),transparent);}
+.panel-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--t3);display:block;margin-bottom:10px;}
+.panel-h{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;line-height:1.4;color:var(--t1);margin-bottom:10px;}
+.panel-body{font-size:14.5px;color:var(--t2);line-height:1.75;}
+.panel-body strong{color:var(--t1);font-weight:600;}
+.panel-why{font-size:13.5px;color:var(--t2);border-top:1px solid var(--bdr);margin-top:14px;padding-top:14px;line-height:1.7;}
+.panel-why strong{color:var(--amb-t);}
+.asset-card{background:var(--bg3);border:1px dashed var(--bmd);border-radius:10px;padding:18px 20px;}
+.asset-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t3);display:block;margin-bottom:9px;}
+.asset-text{font-size:14px;color:var(--t2);line-height:1.75;font-style:italic;}
+.disclaimer{font-size:12.5px;color:var(--t3);margin-top:14px;line-height:1.6;}
+
+/* ONE-PAGER MOCK */
+.pager-mock{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;}
+.pager-head{background:var(--bg4);padding:18px 22px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.pager-brand{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;}
+.pager-tag2{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--amb-t);background:var(--amb-dim);border:1px solid rgba(255,122,53,0.3);border-radius:5px;padding:3px 8px;}
+.pager-body{padding:22px;}
+.pager-h{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;line-height:1.3;margin-bottom:10px;}
+.pager-sub{font-size:13.5px;color:var(--t2);line-height:1.7;margin-bottom:18px;}
+.pager-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.pstat{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:12px;}
+.pstat b{display:block;font-family:'Space Grotesk',sans-serif;font-size:20px;color:var(--amb-t);}
+.pstat span{font-size:11px;color:var(--t3);}
+.pager-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.pcol h5{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--t3);margin-bottom:8px;}
+.pcol ul{padding-left:16px;font-size:13px;color:var(--t2);line-height:1.9;}
+@media(max-width:640px){.pager-stats{grid-template-columns:1fr 1fr;}.pager-cols{grid-template-columns:1fr;}}
+
+/* BATTLECARD */
+.bc-table{display:flex;flex-direction:column;border:1px solid var(--bdr);border-radius:11px;overflow:hidden;}
+.bc-row{display:grid;grid-template-columns:1.1fr 1.3fr 1.6fr;border-bottom:1px solid var(--bdr);}
+.bc-row:last-child{border-bottom:none;}
+.bc-row.head{background:var(--bg4);}
+.bc-cell{padding:16px 18px;font-size:13.5px;color:var(--t2);line-height:1.65;}
+.bc-row.head .bc-cell{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--t3);}
+.bc-cell:not(:last-child){border-right:1px solid var(--bdr);}
+.bc-name{color:var(--t1);font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:14.5px;}
+.bc-cell.why{color:var(--t1);}
+.bc-cell.why strong{color:var(--amb-t);}
+@media(max-width:760px){
+  .bc-row{grid-template-columns:1fr;}
+  .bc-cell:not(:last-child){border-right:none;border-bottom:1px dashed var(--bdr);}
+}
+
+/* OBJECTIONS */
+.obj-grid{display:flex;flex-direction:column;gap:12px;}
+.obj-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:11px;overflow:hidden;}
+.obj-q{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;user-select:none;}
+.obj-q-mark{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);background:var(--red-dim);border:1px solid rgba(229,100,90,0.3);border-radius:5px;padding:3px 8px;flex-shrink:0;}
+.obj-q-text{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--t1);flex:1;}
+.obj-arrow{width:9px;height:9px;border-right:1.5px solid var(--t3);border-bottom:1.5px solid var(--t3);transform:rotate(45deg);transition:transform .2s;flex-shrink:0;}
+.obj-card.open .obj-arrow{transform:rotate(-135deg);}
+.obj-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.obj-card.open .obj-a{max-height:340px;}
+.obj-a-in{padding:0 20px 20px 20px;}
+.obj-a-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--stl-t);background:var(--stl-dim);border:1px solid rgba(111,179,214,0.3);border-radius:5px;padding:2px 7px;display:inline-block;margin-bottom:10px;}
+.obj-a-text{font-size:14px;color:var(--t2);line-height:1.75;}
+.obj-a-text strong{color:var(--t1);}
+
+/* LAUNCH PLAN */
+.lp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:34px;}
+.lp-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:11px;padding:20px;}
+.lp-card.amb{border-color:rgba(255,122,53,0.3);background:linear-gradient(180deg,rgba(255,122,53,0.05),transparent);}
+.lp-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--t3);display:block;margin-bottom:8px;}
+.lp-card h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:10px;}
+.lp-card ul{padding-left:16px;font-size:13px;color:var(--t2);line-height:1.85;}
+.metrics-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.metrics-sub{font-size:13px;color:var(--t3);}
+.metrics-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.metric-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:13px;}
+.metric-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--amb-t);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:6px;}
+.metric-card p{font-size:12.5px;color:var(--t2);line-height:1.6;}
+@media(max-width:900px){.lp-grid{grid-template-columns:1fr;}.metrics-grid{grid-template-columns:1fr 1fr;}}
+
+/* OTHER WORK */
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.wgrid-row2{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.wcard{display:block;background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:20px;text-decoration:none;transition:all .18s ease;position:relative;}
+.wcard:hover{border-color:var(--blg);transform:translateY(-2px);background:var(--bg3);}
+.wcard.full{grid-column:1/-1;}
+.wcard-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);display:block;margin-bottom:9px;}
+.wcard h4{font-family:'Space Grotesk',sans-serif;font-size:16.5px;font-weight:600;color:var(--t1);margin-bottom:8px;}
+.wcard p{font-size:13px;color:var(--t2);line-height:1.65;}
+.wcard-arr{position:absolute;top:20px;right:20px;color:var(--t3);font-size:15px;transition:all .18s;}
+.wcard:hover .wcard-arr{color:var(--amb-t);transform:translate(2px,-2px);}
+@media(max-width:820px){.wgrid{grid-template-columns:1fr;}.wgrid-row2{grid-template-columns:1fr;}}
+
+/* SIGNATURE */
+.sig{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;padding:50px 0 20px;}
+.sig-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;}
+.sig-name span{color:var(--t3);font-weight:400;}
+.sig-links{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--t2);line-height:2;}
+.sig-links a{text-decoration:none;border-bottom:1px solid var(--bdr);transition:border-color .15s;}
+.sig-links a:hover{border-color:var(--amb-t);color:var(--amb-t);}
+.sig-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.sbtn{font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;padding:11px 18px;border-radius:8px;text-decoration:none;display:flex;align-items:center;gap:8px;transition:all .15s;}
+.sbtn.pri{background:var(--amb);color:#20110a;}
+.sbtn.pri:hover{opacity:0.88;}
+.sbtn.ghost{border:1px solid var(--bdr);color:var(--t2);}
+.sbtn.ghost:hover{border-color:var(--blg);color:var(--t1);}
+.note{font-size:12px;color:var(--t3);padding-bottom:50px;line-height:1.7;max-width:700px;}
+
+.pull{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;line-height:1.5;color:var(--t1);border-left:2px solid var(--amb);padding-left:20px;margin-top:24px;max-width:760px;}
+
+.voice-line{font-family:'IBM Plex Mono',monospace;font-style:italic;color:var(--t1);background:var(--bg3);border-left:2px solid var(--red);padding:8px 12px;margin:6px 0;font-size:13px;border-radius:0 6px 6px 0;}
+.bc-evidence{display:block;margin-top:9px;padding-top:9px;border-top:1px dashed var(--bdr);font-size:12.5px;color:var(--t2);}
+.bc-evidence b{color:var(--stl-t);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;}
+.prio-wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:24px;}
+.prio-col{background:var(--bg2);border:1px solid var(--bdr);border-radius:11px;padding:20px 22px;}
+.prio-col.hold{background:var(--bg2);border-color:rgba(229,100,90,0.22);}
+.prio-lab{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.07em;color:var(--amb-t);display:block;margin-bottom:12px;}
+.prio-lab.hold-lab{color:var(--red);}
+.prio-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px;}
+.prio-col li{font-size:13.5px;color:var(--t2);line-height:1.6;display:flex;gap:9px;}
+.prio-col li b{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--t1);flex-shrink:0;min-width:52px;}
+.prio-col.hold li{color:var(--t2);}
+.prio-col.hold li::before{content:'\2013';color:var(--red);flex-shrink:0;}
+@media(max-width:760px){.prio-wrap{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="pbar" id="pbar"></div>
+
+<nav class="nav">
+  <div class="nav-i">
+    <a class="nav-brand" href="#top"><span class="dot"></span><b>Bhanu Kumar</b><span>&middot; Driftrock PMM</span></a>
+    <div class="nav-links">
+      <a class="np" href="#audit">Audit</a>
+      <a class="np" href="#deck">Deck</a>
+      <a class="np" href="#battlecard">Battlecard</a>
+      <a class="np" href="#objections">Objections</a>
+      <a class="np" href="#launch">Launch Plan</a>
+      <a class="np" href="#work">Other Work</a>
+      <a class="np cta" href="https://drive.google.com/file/d/16T39R3Kvu5CNztIi7L7sTEoTpiEd-ssl/view" target="_blank" rel="noopener">Resume</a>
+    </div>
+    <button class="hbg" id="hbg" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-menu" id="mobm">
+  <a href="#audit" onclick="closeMob()">Audit</a>
+  <a href="#deck" onclick="closeMob()">Deck</a>
+  <a href="#battlecard" onclick="closeMob()">Battlecard</a>
+  <a href="#objections" onclick="closeMob()">Objections</a>
+  <a href="#launch" onclick="closeMob()">Launch Plan</a>
+  <a href="#work" onclick="closeMob()">Other Work</a>
+  <a class="mcta" href="https://drive.google.com/file/d/16T39R3Kvu5CNztIi7L7sTEoTpiEd-ssl/view" target="_blank" rel="noopener" onclick="closeMob()">Full resume &rarr;</a>
+</div>
+
+<section class="hero" id="top">
+  <div class="hero-eyebrow">Proof of Work &middot; Product Marketing Manager &middot; Driftrock</div>
+  <h1 class="hero-hed">How I&rsquo;d equip Driftrock&rsquo;s commercial team to win more deals.</h1>
+  <div class="hero-seq">Audit <span>&middot;</span> Deck <span>&middot;</span> Battlecards <span>&middot;</span> Launch</div>
+  <p class="hero-sub">Driftrock doesn&rsquo;t have a product marketing hire yet, so the assets that exist today were built between customer calls. Below is what I&rsquo;d build in the first quarter to change that: a reject well made visible, a deck rewritten around it, a battlecard for what reps actually hear, and the plan for the next launch.</p>
+
+  <div class="console-caption">
+    <span>Simulating: one batch of raw leads through Driftrock&rsquo;s own lifecycle</span>
+    <span class="live" id="liveCap">&#9679; running</span>
+  </div>
+
+  <div class="console rv" id="console">
+    <div class="stage-row">
+      <div class="stage">
+        <div class="stage-lab"><b>01</b> Capture &middot; click a channel</div>
+        <div class="chan-list" id="chanList">
+          <div class="chan active" data-chan="0"><span class="chan-dot"></span>Meta lead ads</div>
+          <div class="chan" data-chan="1"><span class="chan-dot"></span>Auto Trader</div>
+          <div class="chan" data-chan="2"><span class="chan-dot"></span>Publisher network</div>
+          <div class="chan" data-chan="3"><span class="chan-dot"></span>TikTok lead gen</div>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-lab"><b>02</b> Validate</div>
+        <div class="lead-track" id="trackValidate"></div>
+        <div class="reject-well">
+          <div class="reject-count">Rejected before CRM &middot; <b id="rejCount">0</b> of <span id="rejTotal">0</span></div>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-lab"><b>03</b> Convert &amp; route</div>
+        <div class="lead-track" id="trackConvert"></div>
+        <div class="route-card" id="routeCard">
+          <div class="route-name" id="routeName">&mdash;</div>
+          <div class="route-sub" id="routeSub">&mdash;</div>
+          <span class="route-tag" id="routeTag">&mdash;</span>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-lab"><b>04</b> Signal back</div>
+        <div class="signal-zone">
+          <div class="signal-arc">
+            <div class="signal-line"></div>
+            <div class="signal-pulse" id="signalPulse"></div>
+          </div>
+          <div class="signal-count">Conversion signals returned to ad platform &middot; <b id="sigCount">0</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="console-controls">
+    <button class="replay-btn" id="replayBtn" onclick="runBatch(true)">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.87M12.5 1.5v3.13H9.37" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Run another batch
+    </button>
+    <div class="legend">
+      <span><i style="background:var(--amb);"></i>Valid lead</span>
+      <span><i style="background:var(--red);"></i>Rejected, invalid</span>
+      <span><i style="background:var(--stl);"></i>Signal sent to ad platform</span>
+    </div>
+  </div>
+
+  <div class="hero-toc">
+    <a class="toc-pill" href="#audit">01 The Audit</a>
+    <a class="toc-pill" href="#deck">02 Feature to Deck</a>
+    <a class="toc-pill" href="#battlecard">03 Battlecard</a>
+    <a class="toc-pill" href="#objections">04 Objection Handling</a>
+    <a class="toc-pill" href="#launch">05 Launch Plan</a>
+    <a class="toc-pill" href="#work">06 Other Work</a>
+  </div>
+</section>
+
+<!-- 01 AUDIT -->
+<section class="part" id="audit">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">01</span><span class="sec-title">The Audit</span></div>
+    <h2 class="part-h rv">The JD asks for an audit in the first 30 days. Here&rsquo;s the version I can already start from the outside.</h2>
+    <p class="part-lead rv">I don&rsquo;t have Driftrock&rsquo;s internal deck, so I audited what every prospect and new rep sees first: the public site and published case studies. Smaller dataset than the real audit, but the gaps it surfaces usually hold up once you&rsquo;re inside the building too.</p>
+
+    <div class="tabs rv">
+      <button class="tab on" data-tab="a1" onclick="setTab('audit',this,'a1')">What&rsquo;s strong already</button>
+      <button class="tab" data-tab="a2" onclick="setTab('audit',this,'a2')">What a rep actually hears</button>
+    </div>
+
+    <div class="tpanel on rv" data-panel="a1">
+      <div class="panel-box">
+        <span class="panel-tag">driftrock.com &middot; current state</span>
+        <p class="panel-body">The top-line numbers are strong and load-bearing: <strong>$1.8B+ in vehicle sales enabled</strong>, <strong>2.4M+ leads processed annually</strong> across <strong>24 markets</strong> for <strong>35+ brands</strong>. The four-stage story, capture, validate, convert, measure, is clear and consistent site-wide. The case study library is unusually specific for B2B SaaS: named brands, metrics, people. Most PMMs have to fight to get that built from scratch.</p>
+      </div>
+    </div>
+
+    <div class="tpanel rv" data-panel="a2">
+      <div class="panel-box amb">
+        <span class="panel-tag">gap, inferred from the outside</span>
+        <p class="panel-body">The proof is scattered by format, not by the sentence a rep actually hears in the room:</p>
+        <div class="voice-line">&ldquo;We already have a CRM for this.&rdquo;</div>
+        <div class="voice-line">&ldquo;How is this different from HubSpot?&rdquo;</div>
+        <div class="voice-line">&ldquo;Sounds like a lot to implement.&rdquo;</div>
+        <p class="panel-body" style="margin-top:12px;">Three case studies (OMODA &amp; JAECOO, BYD EU, Volkswagen UK) each answer one of these well on their own, but nothing packages the proof against the objection. And there&rsquo;s no public battlecard language at all, which tracks: first dedicated PMM hire, so no one&rsquo;s owned turning proof into ammunition yet.</p>
+      </div>
+      <p class="disclaimer">Assumption flagged: these are the three sentences I&rsquo;d expect from pattern, not lines I&rsquo;ve heard on a real Driftrock call. I&rsquo;d confirm the actual phrasing with sales in week one.</p>
+    </div>
+
+    <div class="prio-wrap rv">
+      <div class="prio-col">
+        <span class="prio-lab">Building, in order</span>
+        <ul>
+          <li><b>Week 1</b> Core sales deck rebuild</li>
+          <li><b>Week 2</b> The four battlecards in Section 03</li>
+          <li><b>Week 3</b> Per-stage customer story pack</li>
+        </ul>
+      </div>
+      <div class="prio-col hold">
+        <span class="prio-lab hold-lab">Not building yet</span>
+        <ul>
+          <li>Pricing page rework: not a sales-enablement blocker today</li>
+          <li>Analyst or AR content: no evidence this audience shows up in deals yet</li>
+          <li>Full messaging rebrand: the current story already tests well per the audit</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="pull rv" style="font-size:16.5px;">Success in the first 30 days isn&rsquo;t a slide count. It&rsquo;s reps no longer pinging Marketing for a custom slide the night before an enterprise demo.</p>
+  </div>
+</section>
+
+<!-- 02 DECK -->
+<section class="part" id="deck">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">02</span><span class="sec-title">Feature to Deck</span></div>
+    <h2 class="part-h rv">Driftrock Convert closes the loop. The site says so in a bullet list. A rep needs it in one slide.</h2>
+    <p class="part-lead rv">Driftrock Convert is described as an AI-powered qualification and conversion engine, with a named capability, the KMI Conversion Agent, that keeps future-model interest warm until a buyer&rsquo;s ready. Here&rsquo;s the gap between how that reads today and the one-pager I&rsquo;d hand a rep before their next demo.</p>
+
+    <div class="tabs rv">
+      <button class="tab on" data-tab="d1" onclick="setTab('deck',this,'d1')">As written today</button>
+      <button class="tab" data-tab="d2" onclick="setTab('deck',this,'d2')">As I&rsquo;d deck it</button>
+    </div>
+
+    <div class="tpanel on rv" data-panel="d1">
+      <div class="panel-box">
+        <span class="panel-tag">driftrock.com/products &middot; feature framing</span>
+        <p class="panel-body">Convert is introduced as automated qualification journeys over WhatsApp, SMS/RCS, and email, with lapsed lead recovery and a KMI Conversion Agent for future-intent prospects. Supporting stats sit in a separate bullet: a 15 to 30% average lift in blended lead-to-sale conversion, and a modelled 46 additional vehicle sales a month at 5,000 leads. The mechanism and the proof are both there. They&rsquo;re just never in the same sentence.</p>
+      </div>
+    </div>
+
+    <div class="tpanel rv" data-panel="d2">
+      <div class="pager-mock">
+        <div class="pager-head">
+          <span class="pager-brand">Driftrock Convert</span>
+          <span class="pager-tag2">Sales one-pager, draft</span>
+        </div>
+        <div class="pager-body">
+          <div class="pager-h">The lead didn&rsquo;t go cold. It just went quiet for a few months.</div>
+          <div class="pager-sub">A buyer who isn&rsquo;t ready this quarter still has an intent date on a calendar somewhere. Convert keeps that date, and reaches back out on WhatsApp, SMS, or email when it arrives, without a human reopening the record.</div>
+          <div class="pager-stats">
+            <div class="pstat"><b>15&ndash;30%</b><span>Avg. lift in blended lead-to-sale conversion</span></div>
+            <div class="pstat"><b>46</b><span>Modelled extra sales/mo at 5,000 leads, 30% lift</span></div>
+            <div class="pstat"><b>24/7</b><span>Automated qualification, no queue</span></div>
+          </div>
+          <div class="pager-cols">
+            <div class="pcol">
+              <h5>Ask for this when</h5>
+              <ul>
+                <li>Sales complains leads go cold before follow-up</li>
+                <li>&ldquo;Not ready yet&rdquo; leads are written off, not nurtured</li>
+                <li>BDC headcount can&rsquo;t cover 24/7 first response</li>
+              </ul>
+            </div>
+            <div class="pcol">
+              <h5>Proof to cite</h5>
+              <ul>
+                <li>Volkswagen UK: 3x lift in Meta lead conversion after CAPI signals closed the loop</li>
+                <li>Platform average: 40% automated qualification rate</li>
+                <li>&asymp;30,000 person-minutes saved monthly at that rate</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="disclaimer" style="margin-top:14px;">The Volkswagen UK proof point is about the Conversions API closing the loop specifically, not the KMI Conversion Agent directly. I paired them because they answer the same rep question, &ldquo;does the follow-up actually work&rdquo;, and I&rsquo;d flag that pairing explicitly in review rather than blur it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 BATTLECARD -->
+<section class="part" id="battlecard">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">03</span><span class="sec-title">Battlecard</span></div>
+    <h2 class="part-h rv">Reps don&rsquo;t lose deals to a competitor. They lose them to &ldquo;we already have something for that.&rdquo;</h2>
+    <p class="part-lead rv">Driftrock rarely loses to a head-to-head vendor bake-off. It loses to a prospect who thinks their CRM, their marketing automation tool, or a single-purpose validation add-on already covers this. Here&rsquo;s the battlecard I&rsquo;d build for that conversation, one evidence point per row.</p>
+
+    <div class="bc-table rv">
+      <div class="bc-row head">
+        <div class="bc-cell">What comes up</div>
+        <div class="bc-cell">What it actually does</div>
+        <div class="bc-cell">Why Driftrock still gets bought</div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-cell bc-name">VinSolutions, DealerSocket, CDK</div>
+        <div class="bc-cell">Dealer CRM and DMS. Manages the deal and the customer record once a lead has already arrived.</div>
+        <div class="bc-cell why">They start where Driftrock ends: no native capture from 40+ sources, no automotive validation before entry, no cross-market view. <strong>Driftrock decides what reaches the CRM, not a replacement for it.</strong>
+          <span class="bc-evidence"><b>Evidence</b> &middot; ~10% of leads rejected as invalid before reaching the CRM, platform average</span>
+        </div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-cell bc-name">HubSpot, generic marketing automation</div>
+        <div class="bc-cell">Horizontal lead capture and nurture, built to work for any industry.</div>
+        <div class="bc-cell why">No model tree database, no dealer geo-routing, no native Auto Trader or Carwow connectors. <strong>A generic tool doesn&rsquo;t know what a VIN or a dealer boundary is.</strong>
+          <span class="bc-evidence"><b>Evidence</b> &middot; 40+ automotive-specific connectors, plus a model tree database no horizontal tool ships with</span>
+        </div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-cell bc-name">Point validation or lead-scoring tools</div>
+        <div class="bc-cell">A single bolt-on, usually email or phone verification, layered onto an existing stack.</div>
+        <div class="bc-cell why">Solves one stage and stops. No capture, no routing, no closed-loop signal back to ad platforms. <strong>Validation is one stage of four, not the whole pitch.</strong>
+          <span class="bc-evidence"><b>Evidence</b> &middot; BMW Motorrad Thailand saw a 16% rise in contactable leads once validation cleaned data invalid in 36% of records</span>
+        </div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-cell bc-name">Fullpath, dealer-level personalization tools</div>
+        <div class="bc-cell">Website personalization for a single dealership storefront, mostly the US independent market.</div>
+        <div class="bc-cell why">Operates at the single-dealer level. Driftrock operates at the OEM or national-brand level, across dealer networks and 24 markets at once. <strong>Different buyer, different unit of deployment.</strong>
+          <span class="bc-evidence"><b>Evidence</b> &middot; 35+ brands run across 24 markets from one Driftrock instance, not one dealer site at a time</span>
+        </div>
+      </div>
+    </div>
+    <p class="disclaimer rv">The Fullpath row is a category observation, not a confirmed head-to-head. I haven&rsquo;t seen a real deal where the two came up against each other, and I&rsquo;d verify that with sales before it goes into a live battlecard.</p>
+  </div>
+</section>
+
+<!-- 04 OBJECTIONS -->
+<section class="part" id="objections">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">04</span><span class="sec-title">Objection Handling</span></div>
+    <h2 class="part-h rv">The four sentences I&rsquo;d expect a rep to hear most, and what I&rsquo;d hand them for each.</h2>
+    <p class="part-lead rv">Click one open. First drafts, meant to be argued with in a real enablement session, not delivered as scripture.</p>
+
+    <div class="obj-grid rv">
+      <div class="obj-card">
+        <div class="obj-q" onclick="toggleObj(this)">
+          <span class="obj-q-mark">Objection</span>
+          <span class="obj-q-text">&ldquo;We already have a CRM. Why do we need another platform?&rdquo;</span>
+          <span class="obj-arrow"></span>
+        </div>
+        <div class="obj-a"><div class="obj-a-in">
+          <span class="obj-a-tag">Response angle</span>
+          <p class="obj-a-text">Agree first: keep the CRM, this isn&rsquo;t a replacement pitch. Then reframe the real question, what&rsquo;s arriving in that CRM today. If roughly 1 in 10 leads industry-wide are invalid or duplicate before validation, that&rsquo;s 1 in 10 records wasting sales time. <strong>Driftrock decides what reaches the CRM. The CRM still runs the deal after that.</strong></p>
+        </div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q" onclick="toggleObj(this)">
+          <span class="obj-q-mark">Objection</span>
+          <span class="obj-q-text">&ldquo;We already run HubSpot for lead capture and nurture.&rdquo;</span>
+          <span class="obj-arrow"></span>
+        </div>
+        <div class="obj-a"><div class="obj-a-in">
+          <span class="obj-a-tag">Response angle</span>
+          <p class="obj-a-text">Ask what happens when a lead arrives without a valid vehicle model tag, or needs routing to the nearest franchised dealer by postcode. <strong>Automotive-specific problems a horizontal tool was never built for</strong>, and retrofitting them usually breaks the moment a model lineup changes. Driftrock ships that logic natively.</p>
+        </div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q" onclick="toggleObj(this)">
+          <span class="obj-q-mark">Objection</span>
+          <span class="obj-q-text">&ldquo;This feels like a lot to implement before we see results.&rdquo;</span>
+          <span class="obj-arrow"></span>
+        </div>
+        <div class="obj-a"><div class="obj-a-in">
+          <span class="obj-a-tag">Response angle</span>
+          <p class="obj-a-text">Lead with the onboarding claim directly: most brands are live on capture within two weeks, no rip-and-replace of the existing stack. Then hand over a timeline proof point rather than a promise, <strong>OMODA &amp; JAECOO generated 15,000+ leads within 90 days of a brand-new UK launch</strong>, filtering 2,000+ invalid leads automatically along the way.</p>
+        </div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q" onclick="toggleObj(this)">
+          <span class="obj-q-mark">Objection</span>
+          <span class="obj-q-text">&ldquo;We run in 15 markets. Won&rsquo;t this just add another layer of complexity?&rdquo;</span>
+          <span class="obj-arrow"></span>
+        </div>
+        <div class="obj-a"><div class="obj-a-in">
+          <span class="obj-a-tag">Response angle</span>
+          <p class="obj-a-text">Flip it: the fragmented stack per market is the complexity that already exists. <strong>BYD EU consolidated onto Driftrock across 15 markets as a single source of truth</strong>, with local publisher partners and one cross-market reporting view rather than fifteen disconnected ones. More markets is the case for one platform, not against it.</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 LAUNCH PLAN -->
+<section class="part" id="launch">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">05</span><span class="sec-title">Launch Plan</span></div>
+    <h2 class="part-h rv">If the KMI Conversion Agent were mine to launch internally, here&rsquo;s the six weeks around it.</h2>
+    <p class="part-lead rv">The JD asks for someone who owns go-to-market end-to-end on new launches, positioning and assets ready before anything ships. The KMI Conversion Agent is already live but reads like a bullet on a features page. Here&rsquo;s the plan I&rsquo;d run to give it a real moment.</p>
+
+    <div class="lp-grid rv">
+      <div class="lp-card">
+        <span class="lp-tag">Week &minus;2</span>
+        <h4>Brief the commercial team</h4>
+        <ul>
+          <li>Walk sales and CS through what &ldquo;future-model interest&rdquo; actually means in the product</li>
+          <li>Ship a one-page &ldquo;ask this, not that&rdquo; guide for the demo</li>
+          <li>Pre-seed 3 to 5 customer champions for early quotes</li>
+        </ul>
+      </div>
+      <div class="lp-card">
+        <span class="lp-tag">Week &minus;1</span>
+        <h4>Build the assets</h4>
+        <ul>
+          <li>Lock the one-pager from Section 02 and a short customer-facing explainer</li>
+          <li>Battlecard line for &ldquo;we already have automation for this&rdquo;</li>
+          <li>In-app changelog note and a first-run tooltip for existing Convert users</li>
+        </ul>
+      </div>
+      <div class="lp-card amb">
+        <span class="lp-tag">Week 1 &ndash; 4</span>
+        <h4>Launch and hold the line</h4>
+        <ul>
+          <li>Publish the launch post and customer explainer</li>
+          <li>Direct nudge to accounts already on Convert but not using future-model nurture</li>
+          <li>Office hours with CS for the first cohort of active accounts</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="metrics-head rv">
+      <span class="metric-cat" style="margin:0;">Success metrics</span>
+      <span class="metrics-sub">How I&rsquo;d know by week 4 if the launch actually landed</span>
+    </div>
+    <div class="metrics-grid rv">
+      <div class="metric-card"><span class="metric-cat">Awareness</span><p>Opens and clicks on the launch post and explainer</p></div>
+      <div class="metric-card"><span class="metric-cat">Activation</span><p>Existing Convert accounts turning on future-model nurture in week 1</p></div>
+      <div class="metric-card"><span class="metric-cat">Sales</span><p>% of reps citing the one-pager unprompted in a demo, by week 2</p></div>
+      <div class="metric-card"><span class="metric-cat">Pipeline</span><p>Lapsed leads re-engaged and moved back into active nurture</p></div>
+      <div class="metric-card"><span class="metric-cat">Product</span><p>Agent-initiated conversations per active seat at 30 days</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 OTHER WORK -->
+<section class="part" id="work" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sec-num">06</span><span class="sec-title">Other Relevant Work</span></div>
+    <h2 class="part-h rv">Five samples worth a look</h2>
+
+    <div class="wgrid rv">
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Veeva/" target="_blank" rel="noopener">
+        <span class="wcard-tag">Full PoW &middot; Vertical SaaS</span>
+        <h4>Veeva</h4>
+        <p>Positioning work for a platform built ground-up for one industry rather than repurposed for it, the exact claim Driftrock makes about automotive. Same instinct: prove the vertical logic, don&rsquo;t just assert it.</p>
+        <span class="wcard-arr">&rarr;</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Deltek/" target="_blank" rel="noopener">
+        <span class="wcard-tag">Full PoW &middot; Enterprise vertical SaaS</span>
+        <h4>Deltek</h4>
+        <p>Competitive positioning and messaging for a project-based enterprise platform where the real objection is &ldquo;we already have something adjacent,&rdquo; not a head-to-head bake-off. The same objection shape as Section 04.</p>
+        <span class="wcard-arr">&rarr;</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Shippo/" target="_blank" rel="noopener">
+        <span class="wcard-tag">Full PoW &middot; Integration-heavy platform</span>
+        <h4>Shippo</h4>
+        <p>Messaging for a platform whose entire value is connecting many external systems into one, the same shape as Driftrock's 40+ lead source and CRM integrations doing the invisible work underneath the pitch.</p>
+        <span class="wcard-arr">&rarr;</span>
+      </a>
+      <div class="wgrid-row2">
+        <a class="wcard" href="https://bhanuexcalibur.github.io/Razorpay/" target="_blank" rel="noopener">
+          <span class="wcard-tag">GTM strategy &middot; Segmentation</span>
+          <h4>Razorpay</h4>
+          <p>Prep work for a GTM strategy conversation on a payments product, thinking through segmentation by stage and sequencing channels by trust. The instinct behind Section 05&rsquo;s launch sequencing came from this exercise.</p>
+          <span class="wcard-arr">&rarr;</span>
+        </a>
+        <a class="wcard" href="https://bhanuexcalibur.github.io/Revolut-Used-Gone-Campaign/" target="_blank" rel="noopener">
+          <span class="wcard-tag">Campaign &middot; Creative platform</span>
+          <h4>Revolut, Already Gone</h4>
+          <p>A full creative platform built from one product insight: positioning, art direction, an in-product moment, and a reactive activation idea. A good launch, like the one in Section 05, needs a moment people notice, not just a changelog line.</p>
+          <span class="wcard-arr">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="sig">
+    <div>
+      <div class="sig-name">Bhanu <span>Kumar</span></div>
+      <div class="sig-links">
+        <a href="mailto:bhanukumar0902@gmail.com">bhanukumar0902@gmail.com</a><br>
+        <a href="https://linkedin.com/in/bhanuexcalibur" target="_blank" rel="noopener">linkedin.com/in/bhanuexcalibur</a>
+      </div>
+    </div>
+    <div class="sig-btns">
+      <a class="sbtn pri" href="mailto:bhanukumar0902@gmail.com">
+        Get in touch
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="#20110a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sbtn ghost" href="https://drive.google.com/file/d/16T39R3Kvu5CNztIi7L7sTEoTpiEd-ssl/view" target="_blank" rel="noopener">Full resume &rarr;</a>
+    </div>
+  </div>
+  <div class="note">Built for the Driftrock PMM role, remote from Bengaluru. Product facts, figures, and named features above are sourced from driftrock.com, its published case studies, and the job description. Sections marked as assumptions or hypotheses are flagged inline rather than presented as verified fact.</div>
+</div>
+
+<script>
+function toggleMob(){document.getElementById('hbg').classList.toggle('open');document.getElementById('mobm').classList.toggle('open');}
+function closeMob(){document.getElementById('hbg').classList.remove('open');document.getElementById('mobm').classList.remove('open');}
+
+function updateProgress(){
+  var h=document.documentElement;
+  var pct=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('pbar').style.width=pct+'%';
+}
+window.addEventListener('scroll',updateProgress,{passive:true});
+
+var rvIo=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');}});
+},{threshold:0.12});
+document.querySelectorAll('.rv').forEach(function(el){rvIo.observe(el);});
+
+function setTab(section,btn,panelId){
+  var nav=btn.parentElement;
+  nav.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  var container=nav.parentElement;
+  container.querySelectorAll('.tpanel').forEach(function(p){p.classList.remove('on');});
+  container.querySelector('[data-panel="'+panelId+'"]').classList.add('on');
+}
+
+function toggleObj(el){
+  var card=el.parentElement;
+  var wasOpen=card.classList.contains('open');
+  document.querySelectorAll('.obj-card').forEach(function(c){c.classList.remove('open');});
+  if(!wasOpen){card.classList.add('open');}
+}
+
+/* ===== LEAD LIFECYCLE CONSOLE ===== */
+var batches=[
+  {chan:0,name:'Meta lead ads',leads:['MB2-441','MB2-442','MB2-443','MB2-444','MB2-445'],reject:1,dealer:'Auto Zenith, Reading',model:'EV crossover enquiry'},
+  {chan:1,name:'Auto Trader',leads:['AT9-118','AT9-119','AT9-120','AT9-121'],reject:0,dealer:'Northgate Motors, Leeds',model:'Used saloon enquiry'},
+  {chan:2,name:'Publisher network',leads:['PN4-771','PN4-772','PN4-773','PN4-774','PN4-775','PN4-776'],reject:2,dealer:'Coastline BYD, Brighton',model:'New EV model enquiry'},
+  {chan:3,name:'TikTok lead gen',leads:['TT1-054','TT1-055','TT1-056'],reject:0,dealer:'Midtown Chery, Manchester',model:'Test drive request'}
+];
+var running=false;
+var invited=false;
+
+function setActiveChan(i){
+  document.querySelectorAll('.chan').forEach(function(c){c.classList.remove('active');});
+  document.querySelector('.chan[data-chan="'+i+'"]').classList.add('active');
+}
+
+document.querySelectorAll('.chan').forEach(function(c){
+  c.addEventListener('click',function(){
+    if(running) return;
+    document.getElementById('replayBtn').classList.remove('invite');
+    var i=parseInt(c.getAttribute('data-chan'),10);
+    runBatch(false,i);
+  });
+});
+
+function runBatch(cycle,forceIdx){
+  if(running) return;
+  running=true;
+  document.getElementById('liveCap').textContent='\u25CF running';
+
+  var idx;
+  if(typeof forceIdx==='number'){idx=forceIdx;}
+  else{idx=Math.floor(Math.random()*batches.length);}
+  var b=batches[idx];
+  setActiveChan(b.chan);
+
+  var tv=document.getElementById('trackValidate');
+  var tc=document.getElementById('trackConvert');
+  tv.innerHTML='';tc.innerHTML='';
+  document.getElementById('routeCard').classList.remove('in');
+  document.getElementById('rejCount').textContent='0';
+  document.getElementById('rejTotal').textContent=b.leads.length;
+
+  var rowH=24;
+  var rejected=0;
+
+  b.leads.forEach(function(id,i){
+    var isReject = i < b.reject;
+    var chip=document.createElement('div');
+    chip.className='lead '+(isReject?'reject':'ok');
+    chip.textContent=id;
+    chip.style.top=(i*rowH)+'px';
+    tv.appendChild(chip);
+
+    var delay = 80 + i*160;
+    setTimeout(function(){
+      requestAnimationFrame(function(){
+        chip.style.transition='opacity .35s ease, transform .35s ease';
+        chip.style.opacity='1';
+        chip.style.transform='translateX(6px)';
+      });
+    },delay);
+
+    var settleDelay = delay + 420;
+    setTimeout(function(){
+      requestAnimationFrame(function(){
+        if(isReject){
+          chip.style.transition='opacity .5s ease, transform .5s ease';
+          chip.style.transform='translateY(46px) translateX(10px)';
+          chip.style.opacity='0';
+          rejected++;
+          document.getElementById('rejCount').textContent=rejected;
+        }else{
+          chip.style.transition='opacity .4s ease, transform .4s ease';
+          chip.style.transform='translateX(120%)';
+          chip.style.opacity='0';
+          var chip2=document.createElement('div');
+          chip2.className='lead ok';
+          chip2.textContent=id;
+          chip2.style.top=(i*rowH)+'px';
+          chip2.style.left='-30%';
+          tc.appendChild(chip2);
+          setTimeout(function(){
+            requestAnimationFrame(function(){
+              chip2.style.transition='opacity .35s ease, transform .35s ease';
+              chip2.style.opacity='1';
+              chip2.style.transform='translateX(6px)';
+            });
+          },20);
+          setTimeout(function(){
+            requestAnimationFrame(function(){
+              chip2.style.opacity='0';
+              chip2.style.transform='translateX(80%)';
+            });
+          },520);
+        }
+      });
+    },settleDelay);
+  });
+
+  var validCount = b.leads.length - b.reject;
+  var totalTime = 80 + b.leads.length*160 + 420 + 700;
+
+  setTimeout(function(){
+    document.getElementById('routeName').textContent=b.dealer;
+    document.getElementById('routeSub').textContent=b.model+' \u00b7 '+validCount+' valid lead'+(validCount===1?'':'s');
+    document.getElementById('routeTag').textContent='Routed, ready to sell';
+    document.getElementById('routeCard').classList.add('in');
+  },totalTime);
+
+  setTimeout(function(){
+    var pulse=document.getElementById('signalPulse');
+    pulse.style.transition='none';
+    pulse.style.left='94%';
+    pulse.style.opacity='0';
+    void pulse.offsetWidth;
+    pulse.style.transition='left .7s ease, opacity .7s ease';
+    requestAnimationFrame(function(){
+      pulse.style.opacity='1';
+      pulse.style.left='6%';
+    });
+    setTimeout(function(){
+      pulse.style.opacity='0';
+      var sc=document.getElementById('sigCount');
+      sc.textContent=(parseInt(sc.textContent,10)||0)+1;
+    },720);
+  },totalTime+500);
+
+  setTimeout(function(){
+    running=false;
+    document.getElementById('liveCap').textContent='\u25CF idle';
+    if(!invited){
+      invited=true;
+      var btn=document.getElementById('replayBtn');
+      btn.classList.add('invite');
+      setTimeout(function(){btn.classList.remove('invite');},2400);
+    }
+  },totalTime+1400);
+}
+
+setTimeout(function(){runBatch(false,0);},420);
+</script>
+
+</body>
+</html>
